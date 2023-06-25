@@ -13,7 +13,15 @@ function App() {
                           or preparing a course, I like to play board games, to cook (and
                           eat), or to just enjoy the Portuguese sun at the beach."
                 />
-                <SkillList skills={['HTML & CSS','JavaScript','Angular','Vue','React']}/>
+                <SkillList
+                    skills={[
+                        'HTML & CSS',
+                        'JavaScript',
+                        'Angular',
+                        'Vue',
+                        'React',
+                    ]}
+                />
             </div>
         </div>
     );
@@ -21,9 +29,7 @@ function App() {
 
 function Avatar(props: { photoPath: string; name: string }) {
     return (
-        <div className="avatar">
-            <img src={props.photoPath} alt={props.name}></img>
-        </div>
+        <img className="avatar" src={props.photoPath} alt={props.name}></img>
     );
 }
 
@@ -38,9 +44,20 @@ function Intro(props: { name: string; desc: string }) {
 
 function SkillList(props: { skills: string[] }) {
     return (
-        <ul className="skill-list">
-            {props.skills.map(skill => <li>{skill}</li>)}
-        </ul>
+        <div className="skill-list">
+            <Skill skill="React" emoji="😅" color="#123456" />
+            <Skill skill="HTML+CSS" emoji="😥" color="orangered" />
+            <Skill skill="JavaScript" emoji="🤔" color="yellow" />
+            <Skill skill="Svelte" emoji="😐" color="orange" />
+        </div>
+    );
+}
+function Skill(props: { skill: string; emoji: string; color: string }) {
+    return (
+        <div className="skill" style={{ backgroundColor: props.color }}>
+            <span>{props.skill}</span>
+            <span>{props.emoji}</span>
+        </div>
     );
 }
 
