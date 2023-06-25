@@ -75,7 +75,7 @@ function Menu() {
     const pizzas = pizzaData;
     // const pizzas = [];
     const numPizzas = pizzas.length;
-    
+
     return (
         <main className="menu">
             <h2>Our Menu</h2>
@@ -95,8 +95,7 @@ function Menu() {
 }
 
 function Pizza(props: { pizzaObj: IPizza }) {
-
-    if(props.pizzaObj.soldOut) return null;
+    if (props.pizzaObj.soldOut) return null;
 
     return (
         <li className="pizza">
@@ -119,13 +118,7 @@ function Footer() {
     return (
         <footer className="footer">
             {isOpen ? (
-                <div className="order">
-                    <p>
-                        We're open until until {closeHour}:00. Come visit us or
-                        order online.
-                    </p>
-                    <button className="btn">Order</button>
-                </div>
+                <Order closeHour={closeHour} />
             ) : (
                 <p>
                     We're happy to welcom you between {openHour}:00 and{' '}
@@ -133,6 +126,18 @@ function Footer() {
                 </p>
             )}
         </footer>
+    );
+}
+
+function Order(props: { closeHour: number }) {
+    return (
+        <div className="order">
+            <p>
+                We're open until until {props.closeHour}:00. Come visit us or
+                order online.
+            </p>
+            <button className="btn">Order</button>
+        </div>
     );
 }
 
