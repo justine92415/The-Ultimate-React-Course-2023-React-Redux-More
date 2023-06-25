@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './index.css';
+import { isStringLiteral } from 'typescript';
 
 const pizzaData = [
     {
@@ -59,7 +60,7 @@ function App() {
 
 function Header() {
     return (
-        <header className='header'>
+        <header className="header">
             <h1>Fast React Pizza Co.</h1>
         </header>
     );
@@ -67,13 +68,41 @@ function Header() {
 
 function Menu() {
     return (
-        <main className='menu  '>
+        <main className="menu  ">
             <h2>Our Menu</h2>
-            <Pizza />
-            <Pizza />
-            <Pizza />
-            <Pizza />
+            <Pizza
+                name="Pizza Spinaci"
+                ingredients="Tomato, mozarella, spinach, and ricotta cheese"
+                photoName="pizzas/spinaci.jpg"
+                price={10}
+            />
+
+            <Pizza
+                name="Pizza Funghi"
+                ingredients="Tomoto, mushrooms"
+                photoName="pizzas/funghi.jpg"
+                price={12}
+            />
         </main>
+    );
+}
+
+function Pizza(props: {
+    name: string;
+    ingredients: string;
+    photoName: string;
+    price: number;
+}) {
+    const { name, ingredients, photoName, price } = props;
+    return (
+        <div className='pizza'>
+            <img src={photoName} alt={name} />
+            <div>
+                <h3>{name}</h3>
+                <p>{ingredients}</p>
+                <span>{price + 3}</span>
+            </div>
+        </div>
     );
 }
 
@@ -84,17 +113,9 @@ function Footer() {
     const isOpen = hour >= openHour && hour < closeHour;
     console.log(isOpen);
     return (
-        <footer className='footer'>{new Date().toLocaleTimeString()}. We're currently open</footer>
-    );
-}
-
-function Pizza() {
-    return (
-        <div>
-            <img src="pizzas/spinaci.jpg" alt="Pizza spinaci" />
-            <h3>Pizza Spinaci</h3>
-            <p>Tomato, mozarella, spinach, and ricotta cheese</p>
-        </div>
+        <footer className="footer">
+            {new Date().toLocaleTimeString()}. We're currently open
+        </footer>
     );
 }
 
