@@ -8,6 +8,7 @@ const message = [
 
 function App() {
     const [step, setStep] = useState(1);
+    const [test, setTest] = useState({ name: 'Justine' });
 
     function handlePrevious() {
         if (step > 1) setStep(step - 1);
@@ -15,6 +16,9 @@ function App() {
 
     function handleNext() {
         if (step < 3) setStep(step + 1);
+        // Bad Practice
+        // test.name = 'Fred';
+        setTest({ name: 'Fred' });
     }
 
     return (
@@ -26,7 +30,7 @@ function App() {
             </div>
 
             <p className="message">
-                Step {step}:{message[step - 1]}
+                Step {step}:{message[step - 1]} {test.name}
             </p>
 
             <div className="buttons">
