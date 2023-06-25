@@ -75,13 +75,14 @@ function Menu() {
     const pizzas = pizzaData;
     // const pizzas = [];
     const numPizzas = pizzas.length;
+    
     return (
         <main className="menu">
             <h2>Our Menu</h2>
             {!!numPizzas ? (
                 <ul className="pizzas">
                     {pizzaData.map((pizza: IPizza) => (
-                        <Pizza pizzaObj={pizza} />
+                        <Pizza pizzaObj={pizza} key={pizza.name} />
                     ))}
                 </ul>
             ) : (
@@ -94,6 +95,9 @@ function Menu() {
 }
 
 function Pizza(props: { pizzaObj: IPizza }) {
+
+    if(props.pizzaObj.soldOut) return null;
+
     return (
         <li className="pizza">
             <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
