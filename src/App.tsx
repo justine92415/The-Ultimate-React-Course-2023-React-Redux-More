@@ -81,17 +81,20 @@ function SkillList({ skills }: { skills: ISkill[] }) {
     return (
         <div className="skill-list">
             {skills.map((skillObj) => (
-                <Skill skillObj={skillObj} key={skillObj.skill} />
+                <Skill skill={skillObj.skill} level={skillObj.level} color={skillObj.color} key={skillObj.skill} />
             ))}
         </div>
     );
 }
-function Skill({ skillObj }: { skillObj: ISkill }) {
-    const { skill, level, color } = skillObj;
+function Skill({skill, level, color}: {skill: string, level: string, color: string}) {
     return (
         <div className="skill" style={{ backgroundColor: color }}>
             <span>{skill}</span>
-            <span>{SkillLevel[level]}</span>
+            <span>
+                {level === 'beginner' && SkillLevel.beginner}
+                {level === 'intermediate' && SkillLevel.intermediate}
+                {level === 'advanced' && SkillLevel.advanced}
+            </span>
         </div>
     );
 }
