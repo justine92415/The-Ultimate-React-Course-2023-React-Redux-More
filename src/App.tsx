@@ -1,6 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+interface ISkill {
+    skill: string;
+    level: 'beginner' | 'intermediate' | 'advanced';
+    color: string;
+}
+
+enum SkillLevel {
+    beginner = '😐',
+    intermediate = '🤔',
+    advanced = '🤗',
+}
+
+const skills: ISkill[] = [
+    {
+        skill: 'HTML+CSS',
+        level: 'advanced',
+        color: '#2662EA',
+    },
+    {
+        skill: 'JavaScript',
+        level: 'advanced',
+        color: '#EFD81D',
+    },
+    {
+        skill: 'Web Design',
+        level: 'advanced',
+        color: '#C3DCAF',
+    },
+    {
+        skill: 'Git and GitHub',
+        level: 'intermediate',
+        color: '#E84F33',
+    },
+    {
+        skill: 'React',
+        level: 'advanced',
+        color: '#60DAFB',
+    },
+    {
+        skill: 'Svelte',
+        level: 'beginner',
+        color: '#FF3B00',
+    },
+];
 
 function App() {
     return (
@@ -13,15 +56,7 @@ function App() {
                           or preparing a course, I like to play board games, to cook (and
                           eat), or to just enjoy the Portuguese sun at the beach."
                 />
-                <SkillList
-                    skills={[
-                        'HTML & CSS',
-                        'JavaScript',
-                        'Angular',
-                        'Vue',
-                        'React',
-                    ]}
-                />
+                <SkillList skills={skills} />
             </div>
         </div>
     );
@@ -42,21 +77,21 @@ function Intro(props: { name: string; desc: string }) {
     );
 }
 
-function SkillList(props: { skills: string[] }) {
+function SkillList({ skills }: { skills: ISkill[] }) {
     return (
         <div className="skill-list">
-            <Skill skill="React" emoji="😅" color="#123456" />
-            <Skill skill="HTML+CSS" emoji="😥" color="orangered" />
-            <Skill skill="JavaScript" emoji="🤔" color="yellow" />
-            <Skill skill="Svelte" emoji="😐" color="orange" />
+            {skills.map((skillObj) => (
+                <Skill skillObj={skillObj} key={skillObj.skill} />
+            ))}
         </div>
     );
 }
-function Skill(props: { skill: string; emoji: string; color: string }) {
+function Skill({ skillObj }: { skillObj: ISkill }) {
+    const { skill, level, color } = skillObj;
     return (
-        <div className="skill" style={{ backgroundColor: props.color }}>
-            <span>{props.skill}</span>
-            <span>{props.emoji}</span>
+        <div className="skill" style={{ backgroundColor: color }}>
+            <span>{skill}</span>
+            <span>{SkillLevel[level]}</span>
         </div>
     );
 }
