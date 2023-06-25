@@ -1,7 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
 import './index.css';
-import { isStringLiteral } from 'typescript';
+
+interface IPizza {
+    name: string;
+    ingredients: string;
+    photoName: string;
+    price: number;
+    soldOut: boolean;
+}
 
 const pizzaData = [
     {
@@ -68,41 +73,27 @@ function Header() {
 
 function Menu() {
     return (
-        <main className="menu  ">
+        <main className="menu">
             <h2>Our Menu</h2>
-            <Pizza
-                name="Pizza Spinaci"
-                ingredients="Tomato, mozarella, spinach, and ricotta cheese"
-                photoName="pizzas/spinaci.jpg"
-                price={10}
-            />
-
-            <Pizza
-                name="Pizza Funghi"
-                ingredients="Tomoto, mushrooms"
-                photoName="pizzas/funghi.jpg"
-                price={12}
-            />
+            <ul className="pizzas">
+                {pizzaData.map((pizza: IPizza) => (
+                    <Pizza pizzaObj={pizza} />
+                ))}
+            </ul>
         </main>
     );
 }
 
-function Pizza(props: {
-    name: string;
-    ingredients: string;
-    photoName: string;
-    price: number;
-}) {
-    const { name, ingredients, photoName, price } = props;
+function Pizza(props: { pizzaObj: IPizza }) {
     return (
-        <div className='pizza'>
-            <img src={photoName} alt={name} />
+        <li className="pizza">
+            <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
             <div>
-                <h3>{name}</h3>
-                <p>{ingredients}</p>
-                <span>{price + 3}</span>
+                <h3>{props.pizzaObj.name}</h3>
+                <p>{props.pizzaObj.ingredients}</p>
+                <span>{props.pizzaObj.price + 3}</span>
             </div>
-        </div>
+        </li>
     );
 }
 
