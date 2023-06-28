@@ -4,39 +4,74 @@ import { useState } from 'react';
 function App() {
     return (
         <div className="App">
-            <Counter />
+            <FlashCards />
         </div>
     );
 }
 
-function Counter() {
-    const [count, setCount] = useState(0);
-    const [step, setStep] = useState(0);
+const questions = [
+    {
+        id: 3457,
+        question: 'What language is React based on?',
+        answer: 'JavaScript',
+    },
+    {
+        id: 7336,
+        question: 'What are the building blocks of React apps?',
+        answer: 'Components',
+    },
+    {
+        id: 8832,
+        question:
+            "What's the name of the syntax we use to describe a UI in React?",
+        answer: 'JSX',
+    },
+    {
+        id: 1297,
+        question: 'How to pass data from parent to child components?',
+        answer: 'Props',
+    },
+    {
+        id: 9103,
+        question: 'How to give components memory?',
+        answer: 'useState hook',
+    },
+    {
+        id: 2002,
+        question:
+            'What do we call an input element that is completely synchronised with state?',
+        answer: 'Controlled element',
+    },
+];
 
-    const date = new Date('june 21 2027');
-    date.setDate(date.getDate() + count);
+interface Question {
+    id: number;
+    question: string;
+    answer: string;
+}
+
+function FlashCards() {
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    function handleClick(id: number) {
+        setSelectedId(id !== selectedId ? id : null);
+    }
+
     return (
-        <div>
-            <div>
-                <button onClick={() => setStep((c) => c - 1)}>-</button>
-                <span>Step: {step}</span>
-                <button onClick={() => setStep((c) => c + 1)}>+</button>
-            </div>
-            <div>
-                <button onClick={() => setCount((c) => c - step)}>-</button>
-                <span>Count: {count}</span>
-                <button onClick={() => setCount((c) => c + step)}>+</button>
-            </div>
-            <p>
-                <span>
-                    {!count
-                        ? 'Today is'
-                        : count > 0
-                        ? `${count} days from today is `
-                        : `${count} days ago was`}
-                </span>
-                <span>{date.toDateString()}</span>
-            </p>
+        <div className="flashcards">
+            {questions.map((question: Question) => (
+                <div
+                    key={question.id}
+                    onClickCapture={() => handleClick(question.id)}
+                    className={question.id === selectedId ? 'selected' : ''}
+                >
+                    <p>
+                        {question.id === selectedId
+                            ? question.answer
+                            : question.question}
+                    </p>
+                </div>
+            ))}
         </div>
     );
 }
