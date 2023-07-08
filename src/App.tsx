@@ -1,11 +1,18 @@
 import { useState } from 'react';
 
-interface IItem {
+type IItem = {
     id: number;
     description: string;
     quantity: number;
     packed: boolean;
-}
+};
+
+type ItemProps = {
+    item?: IItem;
+    items?: IItem[];
+    onDeleteItem: (id: number) => void;
+    onUpdateItem: (id: number) => void;
+};
 
 function App() {
     const [items, setItems] = useState<IItem[]>([]);
@@ -18,11 +25,23 @@ function App() {
         setItems((items) => items.filter((item) => item.id !== id));
     }
 
+    function handleUpdateItem(id: number) {
+        setItems((items) =>
+            items.map((item) =>
+                item.id === id ? { ...item, packed: !item.packed } : item
+            )
+        );
+    }
+
     return (
         <div className="app">
             <Logo />
             <Form onAddItems={handleAddItems} />
-            <PackingList onDeleteItem={handleDeleteItem} items={items} />
+            <PackingList
+                onDeleteItem={handleDeleteItem}
+                onUpdateItem={handleUpdateItem}
+                items={items}
+            />
             <Stats />
         </div>
     );
@@ -78,25 +97,37 @@ function Form({ onAddItems }: { onAddItems: (item: IItem) => void }) {
     );
 }
 
-function PackingList({ items, onDeleteItem }: { items: IItem[],onDeleteItem: (id: number) => void }) {
+function PackingList({ items, onDeleteItem, onUpdateItem }: ItemProps) {
     return (
         <div className="list">
             <ul>
-                {items.map((item: IItem) => (
-                    <Item onDeleteItem={onDeleteItem} key={item.id} item={item} />
+                {items!.map((item: IItem) => (
+                    <Item
+                        onDeleteItem={onDeleteItem}
+                        onUpdateItem={onUpdateItem}
+                        key={item.id}
+                        item={item}
+                    />
                 ))}
             </ul>
         </div>
     );
 }
 
-function Item({ item , onDeleteItem }: { item: IItem , onDeleteItem: (id: number) => void}) {
+function Item({ item, onDeleteItem, onUpdateItem }: ItemProps) {
     return (
         <li>
-            <span style={item.packed ? { textDecoration: 'line-through' } : {}}>
-                {item.quantity} {item.description}
+            <input
+                type="checkbox"
+                checked={item!.packed}
+                onChange={() => onUpdateItem(item!.id)}
+            />
+            <span
+                style={item!.packed ? { textDecoration: 'line-through' } : {}}
+            >
+                {item!.quantity} {item!.description}
             </span>
-            <button onClick={()=>onDeleteItem(item.id)}>❌</button>
+            <button onClick={() => onDeleteItem(item!.id)}>❌</button>
         </li>
     );
 }
