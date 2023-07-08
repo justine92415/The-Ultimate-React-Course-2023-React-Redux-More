@@ -14,11 +14,17 @@ interface IItem {
 }
 
 function App() {
+    const [items, setItems] = useState<IItem[]>([]);
+
+    function handleAddItems(item: IItem) {
+        setItems((items) => [...items, item]);
+    }
+
     return (
         <div className="app">
             <Logo />
-            <Form />
-            <PackingList />
+            <Form onAddItems={handleAddItems} />
+            <PackingList items={items} />
             <Stats />
         </div>
     );
@@ -28,7 +34,7 @@ function Logo() {
     return <h1>😎 Far Away 😁</h1>;
 }
 
-function Form() {
+function Form({ onAddItems }: { onAddItems: (item: IItem) => void }) {
     const [description, setDescription] = useState('');
     const [quantity, setQuantity] = useState(1);
 
@@ -43,7 +49,9 @@ function Form() {
             packed: false,
         };
         console.log(newItem);
-        
+
+        onAddItems(newItem);
+
         setDescription('');
         setQuantity(1);
     }
@@ -72,11 +80,11 @@ function Form() {
     );
 }
 
-function PackingList() {
+function PackingList({ items }: { items: IItem[] }) {
     return (
         <div className="list">
             <ul>
-                {initialItems.map((item: IItem) => (
+                {items.map((item: IItem) => (
                     <Item key={item.id} item={item} />
                 ))}
             </ul>
