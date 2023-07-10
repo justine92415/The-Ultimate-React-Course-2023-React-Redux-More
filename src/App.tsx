@@ -41,28 +41,31 @@ function App() {
                     </p>
 
                     <div className="buttons">
-                        <button
-                            style={{
-                                backgroundColor: '#7950f2',
-                                color: '#fff',
-                            }}
+                        <Button
+                            textColor="#fff"
+                            bgColor="#7950f2"
                             onClick={handlePrevious}
-                        >
-                            Previous
-                        </button>
-                        <button
-                            style={{
-                                backgroundColor: '#7950f2',
-                                color: '#fff',
-                            }}
+                        ><span>😒</span> Previous</Button>
+                        <Button
+                            textColor="#fff"
+                            bgColor="#7950f2"
                             onClick={handleNext}
-                        >
-                            Next
-                        </button>
+                        >Next <span>😒</span></Button>
                     </div>
                 </div>
             )}
         </>
+    );
+}
+
+function Button({ textColor, bgColor, onClick, children}: any) {
+    return (
+        <button
+            style={{ backgroundColor: bgColor, color: textColor }}
+            onClick={onClick}
+        >
+            {children}
+        </button>
     );
 }
 
