@@ -71,20 +71,22 @@ const average = (arr: any) =>
   );
 
 function App() {
+  const [movies, setMovies] = useState<IMovie[]>(tempMovieData);
+
   return (
     <>
-      <NavBar />
-      <Main />
+      <NavBar movies={movies} />
+      <Main movies={movies} />
     </>
   );
 }
 
-function NavBar() {
+function NavBar({ movies }: { movies: IMovie[] }) {
   return (
     <nav className="nav-bar">
       <Logo></Logo>
       <Search></Search>
-      <Numresults></Numresults>
+      <Numresults movies={movies}></Numresults>
     </nav>
   );
 }
@@ -111,25 +113,25 @@ function Search() {
   );
 }
 
-function Numresults() {
+function Numresults({ movies }: { movies: IMovie[] }) {
   return (
     <p className="num-results">
-      Found <strong>X</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 }
 
-function Main() {
+function Main({ movies }: { movies: IMovie[] }) {
   return (
     <main className="main">
-      <ListBox></ListBox>
+      <ListBox movies={movies}></ListBox>
       <WatchBox></WatchBox>
     </main>
   );
 }
 
 export default App;
-function ListBox() {
+function ListBox({ movies }: { movies: IMovie[] }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -139,14 +141,12 @@ function ListBox() {
       >
         {isOpen1 ? '–' : '+'}
       </button>
-      {isOpen1 && <MovieList></MovieList>}
+      {isOpen1 && <MovieList movies={movies}></MovieList>}
     </div>
   );
 }
 
-function MovieList() {
-  const [movies, setMovies] = useState<IMovie[]>(tempMovieData);
-
+function MovieList({ movies }: { movies: IMovie[] }) {
   return (
     <ul className="list">
       {movies?.map((movie: IMovie) => (
