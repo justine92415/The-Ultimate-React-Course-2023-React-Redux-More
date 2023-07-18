@@ -31,6 +31,9 @@ export default function App() {
   );
 }
 
+console.log(<DifferentContent test={23}></DifferentContent>);
+console.log(DifferentContent({ test: 23 }));
+
 function Tabbed({ content }: { content: ContentItem[] }) {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -46,13 +49,23 @@ function Tabbed({ content }: { content: ContentItem[] }) {
       {activeTab <= 2 ? (
         <TabContent item={content.at(activeTab)!} />
       ) : (
-        <DifferentContent />
+        <DifferentContent test={23} />
       )}
+
+      {TabContent({ item: content.at(activeTab)! })}
     </div>
   );
 }
 
-function Tab({ num, activeTab, onClick }: { num: number; activeTab: number; onClick: (num: number) => void }) {
+function Tab({
+  num,
+  activeTab,
+  onClick,
+}: {
+  num: number;
+  activeTab: number;
+  onClick: (num: number) => void;
+}) {
   return (
     <button
       className={activeTab === num ? 'tab active' : 'tab'}
@@ -96,7 +109,7 @@ function TabContent({ item }: { item: ContentItem }) {
   );
 }
 
-function DifferentContent() {
+function DifferentContent({ test }: { test: number }) {
   return (
     <div className="tab-content">
       <h4>I'm a DIFFERENT tab, so I reset state 💣💥</h4>
