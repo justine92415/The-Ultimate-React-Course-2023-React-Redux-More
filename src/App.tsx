@@ -30,9 +30,9 @@ export default function App() {
     </div>
   );
 }
-
+/* 
 console.log(<DifferentContent test={23}></DifferentContent>);
-console.log(DifferentContent({ test: 23 }));
+console.log(DifferentContent({ test: 23 })); */
 
 function Tabbed({ content }: { content: ContentItem[] }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -47,12 +47,15 @@ function Tabbed({ content }: { content: ContentItem[] }) {
       </div>
 
       {activeTab <= 2 ? (
-        <TabContent item={content.at(activeTab)!} />
+        <TabContent
+          item={content.at(activeTab)!}
+          key={content.at(activeTab)!.summary}
+        />
       ) : (
         <DifferentContent test={23} />
       )}
 
-      {TabContent({ item: content.at(activeTab)! })}
+      {/* {TabContent({ item: content.at(activeTab)! })} */}
     </div>
   );
 }
