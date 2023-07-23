@@ -78,40 +78,66 @@ const average = (arr: any) =>
 const KEY = '9588565';
 
 function App() {
+  const [query, setQuery] = useState('inception');
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [watched, setWatched] = useState<IWatched[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   // const query = 'asdfafdsf12313';
-  const query = 'interstellar';
+  const tempQuery = 'interstellar';
+
+  /* useEffect(function () {
+    console.log('After initial render');
+  }, []);
 
   useEffect(function () {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${KEY}&s=${query}}`
-        );
-        if (!res.ok)
-          throw new Error('Something went wrong with fetching movies');
-        const data = await res.json();
-        if (data.Response === 'False') throw new Error(data.Error);
-        setMovies(data.Search);
-      } catch (error: any) {
-        console.error(error.message);
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+    console.log('After every render');
+  });
+
+  useEffect(function () {
+    console.log('D');
+  }, [query]);
+
+  console.log('During render'); */
+
+  useEffect(
+    function () {
+      async function fetchData() {
+        try {
+          setIsLoading(true);
+          setError('');
+          const res = await fetch(
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}}`
+          );
+          if (!res.ok)
+            throw new Error('Something went wrong with fetching movies');
+          const data = await res.json();
+          if (data.Response === 'False') throw new Error(data.Error);
+          setMovies(data.Search);
+        } catch (error: any) {
+          console.error(error.message);
+          setError(error.message);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
-    fetchData();
-  }, []);
+
+      if (query.length < 3) {
+        setMovies([]);
+        setError('');
+        return;
+      }
+
+      fetchData();
+    },
+    [query]
+  );
 
   return (
     <>
       <NavBar>
         <Logo></Logo>
-        <Search></Search>
+        <Search query={query} setQuery={setQuery}></Search>
         <Numresults movies={movies}></Numresults>
       </NavBar>
       <Main>
@@ -139,12 +165,7 @@ function ErrorMessage({ error: message }: { error: string }) {
 }
 
 function NavBar({ children }: { children: React.ReactNode }) {
-  return (
-    <nav className="nav-bar">
-      <span>⛔</span>
-      {children}
-    </nav>
-  );
+  return <nav className="nav-bar">{children}</nav>;
 }
 
 function Logo() {
@@ -156,8 +177,13 @@ function Logo() {
   );
 }
 
-function Search() {
-  const [query, setQuery] = useState('');
+function Search({
+  query,
+  setQuery,
+}: {
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+}) {
   return (
     <input
       className="search"
