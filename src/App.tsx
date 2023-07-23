@@ -64,6 +64,11 @@ interface IWatched {
   userRating: number;
 }
 
+interface IErrorObj {
+  Response: string;
+  Error: string;
+}
+
 const average = (arr: any) =>
   arr.reduce(
     (acc: number, cur: number, i: number, arr: any) => acc + cur / arr.length,
@@ -75,15 +80,29 @@ const KEY = '9588565';
 function App() {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [watched, setWatched] = useState<IWatched[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  // const query = 'asdfafdsf12313';
+  const query = 'interstellar';
 
   useEffect(function () {
     async function fetchData() {
-      const res = await fetch(
-        `https://www.omdbapi.com/?apikey=${KEY}&s=interstellar`
-      );
-      const data = await res.json();
-      setMovies(data.Search);
-      console.log(data.Search);
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `https://www.omdbapi.com/?apikey=${KEY}&s=${query}}`
+        );
+        if (!res.ok)
+          throw new Error('Something went wrong with fetching movies');
+        const data = await res.json();
+        if (data.Response === 'False') throw new Error(data.Error);
+        setMovies(data.Search);
+      } catch (error: any) {
+        console.error(error.message);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -97,7 +116,10 @@ function App() {
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies}></MovieList>
+          {/* {isLoading ? <Loader /> : <MovieList movies={movies}></MovieList>} */}
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies}></MovieList>}
+          {error && <ErrorMessage error={error} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched}></WatchedSummary>
@@ -108,8 +130,21 @@ function App() {
   );
 }
 
+function Loader() {
+  return <div className="loader">Loading...</div>;
+}
+
+function ErrorMessage({ error: message }: { error: string }) {
+  return <div className="error">{message}</div>;
+}
+
 function NavBar({ children }: { children: React.ReactNode }) {
-  return <nav className="nav-bar">{children}</nav>;
+  return (
+    <nav className="nav-bar">
+      <span>⛔</span>
+      {children}
+    </nav>
+  );
 }
 
 function Logo() {
