@@ -22,7 +22,7 @@ export const average = (arr: any) =>
 export const KEY = '9588565';
 
 function App() {
-  const [query, setQuery] = useState('inception');
+  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [watched, setWatched] = useState<IWatched[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +77,7 @@ function App() {
           setMovies(data.Search);
           setError('');
         } catch (error: any) {
-          console.error(error.message);
+          console.log(error.message);
           if (error.name !== 'AbortError') {
             setError(error.message);
           }
@@ -91,7 +91,7 @@ function App() {
         setError('');
         return;
       }
-
+      handleCloseMovie();
       fetchData();
       return () => controller.abort();
     },
