@@ -77,9 +77,15 @@ function App() {
   const [watched, setWatched] = useState<IWatched[]>([]);
 
   useEffect(function () {
-    fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data.Search));
+    async function fetchData() {
+      const res = await fetch(
+        `https://www.omdbapi.com/?apikey=${KEY}&s=interstellar`
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+      console.log(data.Search);
+    }
+    fetchData();
   }, []);
 
   return (
