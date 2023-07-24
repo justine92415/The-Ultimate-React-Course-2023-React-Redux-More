@@ -24,28 +24,11 @@ export const KEY = '9588565';
 function App() {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<IMovie[]>([]);
+  const [watched, setWatched] = useState<IWatched[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  // const [watched, setWatched] = useState<IWatched[]>([]);
-  const [watched, setWatched] = useState<IWatched[]>(function () {
-    const watched = localStorage.getItem('watched');
-    return watched ? JSON.parse(watched) : [];
-  });
-
-  /* useEffect(function () {
-    console.log('After initial render');
-  }, []);
-
-  useEffect(function () {
-    console.log('After every render');
-  });
-
-  useEffect(function () {
-    console.log('D');
-  }, [query]);
-
-  console.log('During render'); */
+ 
 
   function handleSelectMovie(id: string) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -62,13 +45,6 @@ function App() {
   function handleDeleteWatched(id: string) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(
-    function () {
-      localStorage.setItem('watched', JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   useEffect(
     function () {
