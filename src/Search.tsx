@@ -20,7 +20,7 @@ export function Search({
 
     document.addEventListener('keydown', callback);
     return () => document.removeEventListener('keydown', callback);
-  }, []);
+  }, [setQuery]);
 
   return (
     <input
