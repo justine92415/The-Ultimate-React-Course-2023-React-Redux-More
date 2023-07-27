@@ -3,6 +3,7 @@ import { IMovieDetail, IWatched } from './interface';
 import StartRating from './StartRating';
 import { Loader } from './Loader';
 import { KEY } from './useMovies';
+import { useKey } from './useKey';
 
 export function MovieDetails({
   selectedId,
@@ -67,20 +68,7 @@ export function MovieDetails({
     onCloseMovie();
   }
 
-  useEffect(function () {
-    function callback(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        onCloseMovie();
-        console.log('CLOSING');
-      }
-    }
-
-    document.addEventListener('keydown', callback);
-
-    return function () {
-      document.removeEventListener('keydown', callback);
-    };
-  });
+  useKey('Escape', onCloseMovie);
 
   useEffect(
     function () {
