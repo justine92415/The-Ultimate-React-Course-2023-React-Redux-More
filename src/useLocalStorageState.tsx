@@ -5,16 +5,16 @@ export function useLocalStorageState(
   initialState: Array<IWatched>,
   key: string
 ): [Array<IWatched>, Function] {
-  const [value, setWatched] = useState<IWatched[]>(function () {
-    const storagedValue = localStorage.getItem('key');
+  const [value, setValue] = useState<IWatched[]>(function () {
+    const storagedValue = localStorage.getItem(key);
     return storagedValue ? JSON.parse(storagedValue) : initialState;
   });
 
   useEffect(
     function () {
-      localStorage.setItem('watched', JSON.stringify(value));
+      localStorage.setItem(key, JSON.stringify(value));
     },
     [value, key]
   );
-  return [value, setWatched];
+  return [value, setValue];
 }
