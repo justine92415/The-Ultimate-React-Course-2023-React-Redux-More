@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { IMovieDetail, IWatched } from './interface';
 import StartRating from './StartRating';
 import { Loader } from './Loader';
-import { KEY } from './App';
+import { KEY } from './useMovies';
 
 export function MovieDetails({
   selectedId,
