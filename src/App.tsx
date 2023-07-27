@@ -92,6 +92,8 @@ function App() {
           console.log(error.message);
           if (error.name !== 'AbortError') {
             setError(error.message);
+            console.log('test');
+            
           }
         } finally {
           setIsLoading(false);
