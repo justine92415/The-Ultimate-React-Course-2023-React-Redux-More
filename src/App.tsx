@@ -1,7 +1,42 @@
-import Header from "./Header";
-import Main from "./main";
+import { useEffect, useReducer } from 'react';
+import Header from './Header';
+import Main from './main';
+import { Action, Status } from './type/action';
+
+const initialState: { questions: []; status: Status } = {
+  questions: [],
+  // 'loading' | 'error' | 'ready' | 'active' | 'finished'
+  status: 'loading',
+};
+
+function reducer(state: any, action: { type: Action; payload?: any }): any {
+  switch (action.type) {
+    case 'dataReceived':
+      return {
+        ...state,
+        questions: action.payload,
+        status: 'ready',
+      };
+    case 'dataFailed':
+      return {
+        ...state,
+        status: 'error',
+      };
+    default:
+      throw new Error('Action unknown');
+  }
+}
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(function () {
+    fetch('http://localhost:8000/questions')
+      .then((res) => res.json())
+      .then((data) => dispatch({ type: 'dataReceived', payload: data }))
+      .catch((err) => dispatch({ type: 'dataFailed' }));
+  }, []);
+
   return (
     <div className="app">
       <Header />
