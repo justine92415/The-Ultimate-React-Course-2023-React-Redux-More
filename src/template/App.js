@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
-import { faker } from '@faker-js/faker';
+import { useEffect, useState } from "react";
+import { faker } from "@faker-js/faker";
 
-interface Post {
-  title: string;
-  body: string;
-}
-
-function createRandomPost(): Post {
+function createRandomPost() {
   return {
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
     body: faker.hacker.phrase(),
@@ -14,10 +9,10 @@ function createRandomPost(): Post {
 }
 
 function App() {
-  const [posts, setPosts] = useState<Post[]>(() =>
+  const [posts, setPosts] = useState(() =>
     Array.from({ length: 30 }, () => createRandomPost())
   );
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFakeDark, setIsFakeDark] = useState(false);
 
   // Derived state. These are the posts that will actually be displayed
@@ -30,7 +25,7 @@ function App() {
         )
       : posts;
 
-  function handleAddPost(post: Post) {
+  function handleAddPost(post) {
     setPosts((posts) => [post, ...posts]);
   }
 
@@ -41,7 +36,7 @@ function App() {
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
   useEffect(
     function () {
-      document.documentElement.classList.toggle('fake-dark-mode');
+      document.documentElement.classList.toggle("fake-dark-mode");
     },
     [isFakeDark]
   );
@@ -52,7 +47,7 @@ function App() {
         onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
         className="btn-fake-dark-mode"
       >
-        {isFakeDark ? '☀️' : '🌙'}
+        {isFakeDark ? "☀️" : "🌙"}
       </button>
 
       <Header
@@ -68,17 +63,7 @@ function App() {
   );
 }
 
-function Header({
-  posts,
-  onClearPosts,
-  searchQuery,
-  setSearchQuery,
-}: {
-  posts: Post[];
-  onClearPosts: () => void;
-  searchQuery: string;
-  setSearchQuery: (s: string) => void;
-}) {
+function Header({ posts, onClearPosts, searchQuery, setSearchQuery }) {
   return (
     <header>
       <h1>
@@ -96,13 +81,7 @@ function Header({
   );
 }
 
-function SearchPosts({
-  searchQuery,
-  setSearchQuery,
-}: {
-  searchQuery: string;
-  setSearchQuery: (s: string) => void;
-}) {
+function SearchPosts({ searchQuery, setSearchQuery }) {
   return (
     <input
       value={searchQuery}
@@ -112,17 +91,11 @@ function SearchPosts({
   );
 }
 
-function Results({ posts }: { posts: Post[] }) {
+function Results({ posts }) {
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 
-function Main({
-  posts,
-  onAddPost,
-}: {
-  posts: Post[];
-  onAddPost: (p: Post) => void;
-}) {
+function Main({ posts, onAddPost }) {
   return (
     <main>
       <FormAddPost onAddPost={onAddPost} />
@@ -131,7 +104,7 @@ function Main({
   );
 }
 
-function Posts({ posts }: { posts: Post[] }) {
+function Posts({ posts }) {
   return (
     <section>
       <List posts={posts} />
@@ -139,16 +112,16 @@ function Posts({ posts }: { posts: Post[] }) {
   );
 }
 
-function FormAddPost({ onAddPost }: { onAddPost: (p: Post) => void }) {
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+function FormAddPost({ onAddPost }) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
-  const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = function (e) {
     e.preventDefault();
     if (!body || !title) return;
     onAddPost({ title, body });
-    setTitle('');
-    setBody('');
+    setTitle("");
+    setBody("");
   };
 
   return (
@@ -168,10 +141,10 @@ function FormAddPost({ onAddPost }: { onAddPost: (p: Post) => void }) {
   );
 }
 
-function List({ posts }: { posts: Post[] }) {
+function List({ posts }) {
   return (
     <ul>
-      {posts.map((post: Post, i: number) => (
+      {posts.map((post, i) => (
         <li key={i}>
           <h3>{post.title}</h3>
           <p>{post.body}</p>
@@ -181,7 +154,7 @@ function List({ posts }: { posts: Post[] }) {
   );
 }
 
-function Archive({ onAddPost }: { onAddPost: (p: Post) => void }) {
+function Archive({ onAddPost }) {
   // Here we don't need the setter function. We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. We could also move the posts outside the components, but I wanted to show you this trick 😉
   const [posts] = useState(() =>
     // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
@@ -194,7 +167,7 @@ function Archive({ onAddPost }: { onAddPost: (p: Post) => void }) {
     <aside>
       <h2>Post archive</h2>
       <button onClick={() => setShowArchive((s) => !s)}>
-        {showArchive ? 'Hide archive posts' : 'Show archive posts'}
+        {showArchive ? "Hide archive posts" : "Show archive posts"}
       </button>
 
       {showArchive && (
