@@ -1,7 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
-import { Post } from './type/Post';
-import { PostProvider, usePosts } from './PostProvider';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
+
+interface Post {
+  title: string;
+  body: string;
+}
 
 function createRandomPost(): Post {
   return {
@@ -10,8 +13,49 @@ function createRandomPost(): Post {
   };
 }
 
+interface PostContextValue {
+  posts: Post[];
+  onAddPost: (p: Post) => void;
+  onClearPosts: () => void;
+  searchQuery: string;
+  setSearchQuery: (s: string) => void;
+}
+
+const postValue: PostContextValue = {
+  posts: [],
+  onAddPost: () => {},
+  onClearPosts: () => {},
+  searchQuery: '',
+  setSearchQuery: () => {},
+};
+
+// 1) Create a context
+const PostContext = createContext(postValue);
+
 function App() {
+  const [posts, setPosts] = useState<Post[]>(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+  const [searchQuery, setSearchQuery] = useState('');
   const [isFakeDark, setIsFakeDark] = useState(false);
+
+  // Derived state. These are the posts that will actually be displayed
+  const searchedPosts =
+    searchQuery.length > 0
+      ? posts.filter((post) =>
+          `${post.title} ${post.body}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        )
+      : posts;
+
+  function handleAddPost(post: Post) {
+    setPosts((posts) => [post, ...posts]);
+  }
+
+  function handleClearPosts() {
+    setPosts([]);
+  }
 
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
   useEffect(
@@ -23,9 +67,16 @@ function App() {
 
   return (
     // 2) Provide value to child components
-
-    <section>
-      <PostProvider>
+    <PostContext.Provider
+      value={{
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        onClearPosts: handleClearPosts,
+        searchQuery,
+        setSearchQuery,
+      }}
+    >
+      <section>
         <button
           onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
           className="btn-fake-dark-mode"
@@ -34,17 +85,17 @@ function App() {
         </button>
 
         <Header />
-        <Main />
-        <Archive />
+        <Main/>
+        <Archive/>
         <Footer />
-      </PostProvider>
-    </section>
+      </section>
+    </PostContext.Provider>
   );
 }
 
 function Header() {
   // 3) Consuming context value
-  const { onClearPosts } = usePosts();
+  const { onClearPosts } = useContext(PostContext);
 
   return (
     <header>
@@ -61,7 +112,7 @@ function Header() {
 }
 
 function SearchPosts() {
-  const { searchQuery, setSearchQuery } = usePosts();
+  const { searchQuery, setSearchQuery } = useContext(PostContext);
   return (
     <input
       value={searchQuery}
@@ -72,21 +123,21 @@ function SearchPosts() {
 }
 
 function Results() {
-  const { posts } = usePosts();
+  const { posts } = useContext(PostContext);
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 
 function Main() {
   return (
     <main>
-      <FormAddPost />
-      <Posts />
+      <FormAddPost/>
+      <Posts/>
     </main>
   );
 }
 
 function Posts() {
-  const { posts } = usePosts();
+  const { posts } = useContext(PostContext);
   return (
     <section>
       <List posts={posts} />
@@ -97,7 +148,7 @@ function Posts() {
 function FormAddPost() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const { onAddPost } = usePosts();
+  const { onAddPost } = useContext(PostContext);
 
   const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -143,7 +194,7 @@ function Archive() {
     // 💥 WARNING: This might make your computer slow! Try a smaller `length` first
     Array.from({ length: 10000 }, () => createRandomPost())
   );
-  const { onAddPost } = usePosts();
+  const { onAddPost } = useContext(PostContext);
 
   const [showArchive, setShowArchive] = useState(false);
 
